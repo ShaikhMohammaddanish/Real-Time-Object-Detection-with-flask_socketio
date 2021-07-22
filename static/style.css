@@ -192,7 +192,6 @@ video {
   width: 100%;
   padding: 2%;
   background: var(--main-darklg);
-
   /* background: #0000ff73; */
 }
 .cam_selected{

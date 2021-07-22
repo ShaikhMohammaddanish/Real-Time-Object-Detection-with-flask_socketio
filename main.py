@@ -121,7 +121,24 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    passwords = ['Danish@44', 'Password', 'Danish']
+    input_json = request.get_json(force=True) 
 
+    try:
+        if input_json['Password'] in passwords:
+            response ={"login":"1"}
+        else:
+            response ={"login":"0"}
+
+    except Exception as e:
+        print(e)
+        response ={"login":"0"}
+
+
+
+    return jsonify(response)
 
 
 

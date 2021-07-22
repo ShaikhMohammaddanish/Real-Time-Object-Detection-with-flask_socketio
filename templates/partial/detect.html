@@ -19,7 +19,7 @@
             </div>
 
 
-            <button type="button" id="endDetection1" onclick="endDetectionFuncton1();" class="btn btn-primary endDetection hide" data-bs-dismiss="modal">End Detection</button>
+            <button type="button" id="endDetection1" onclick="endDetectionFuncton1();" class="btn btn-primary endDetection hide" data-bs-dismiss="modal">Stop Camera</button>
 
 
 
@@ -63,7 +63,10 @@
             </div>
             <div class="modal-body">
 
-
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="Password1" placeholder="Enter Password">
+                    <p class="text-danger" id='validation1'></p>
+                </div>
 
                 <div class="tab-pane fade show active" id="Webcam1" role="tabpanel" aria-labelledby="Webcam-tab1">
                     <label for="videoSource1">Select Camera</label>
@@ -110,13 +113,41 @@
     const validation1 = document.getElementById('validation1');
     const startDetection1 = document.getElementById("startDetection1")
     const endDetection1 = document.getElementById("endDetection1")
+    const Password1 = document.getElementById('Password1');
 
 
     let Flasksocket1
+    var isLOgin1 = false
+
+    // get Password1 from user
+    Password1.addEventListener('input', updateValue);
+
+
+    // function for login api
+    async function login(Password) {
+        var requestOptions = {
+            method: 'POST',
+            body: JSON.stringify({ "Password": Password }),
+        };
+
+        loginData = await fetch("/login", requestOptions).then(response => response.json());
+        return loginData
+
+    }
 
 
 
 
+    async function updateValue(e) {
+
+        loginData = await login(e.target.value);
+        // console.log('data', loginData)
+
+        if (loginData['login'] === '1') {
+            isLOgin1 = true
+            validation1.textContent = 'Good to go!!';
+        }
+    }
 
 
 
@@ -124,13 +155,19 @@
 
 
     function HomeScreen1() {
-        beforeSave1.classList.add('hide');
-        afterSave1.classList.remove('hide');
-        Flasksocket1 = io("https://danish-detection-app.herokuapp.com/", { query: { transport: "websocket" } });
-        // Flasksocket1 = io("http://127.0.0.1:5000/", { query: { transport: "websocket" } });
+        if (isLOgin1) {
+            beforeSave1.classList.add('hide');
+            afterSave1.classList.remove('hide');
+            Flasksocket1 = io("https://danish-detection-app.herokuapp.com/", { query: { transport: "websocket" } });
+            // Flasksocket1 = io("http://127.0.0.1:5000/", { query: { transport: "websocket" } });
 
-        // Flask socket metods
-        Flasksocket1.on('connect', function () { console.log("Connected...!", Flasksocket1.connected) });
+            // Flask socket metods
+            Flasksocket1.on('connect', function () { console.log("Connected...!", Flasksocket1.connected) });
+        }
+
+        else {
+            alert('Access denied!!');
+        }
     }
 
 
