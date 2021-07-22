@@ -126,8 +126,8 @@
     function HomeScreen1() {
         beforeSave1.classList.add('hide');
         afterSave1.classList.remove('hide');
-        Flasksocket1 = io("https://danish-detection-app.herokuapp.com/", { query: { transport: "websocket" } });
-        // Flasksocket1 = io("http://127.0.0.1:8000/", { query: { transport: "websocket" } });
+        // Flasksocket1 = io("https://danish-detection-app.herokuapp.com/", { query: { transport: "websocket" } });
+        Flasksocket1 = io("http://127.0.0.1:8000/", { query: { transport: "websocket" } });
 
         // Flask socket metods
         Flasksocket1.on('connect', function () { console.log("Connected...!", Flasksocket1.connected) });

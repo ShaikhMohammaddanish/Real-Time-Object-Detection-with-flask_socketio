@@ -16,10 +16,10 @@ import os
 import glob
 
 
-if not(os.path.exists('pretrain_model/yolov3.weights')):
-    url = f'https://pjreddie.com/media/files/yolov3.weights'
-    r = requests.get(url, allow_redirects=True)
-    open('pretrain_model/yolov3.weights', 'wb').write(r.content)
+# if not(os.path.exists('pretrain_model/yolov3.weights')):
+#     url = f'https://pjreddie.com/media/files/yolov3.weights'
+#     r = requests.get(url, allow_redirects=True)
+#     open('pretrain_model/yolov3.weights', 'wb').write(r.content)
 
 netDetection = cv2.dnn.readNetFromDarknet("pretrain_model/yolov3.cfg","pretrain_model/yolov3.weights"  )
 
@@ -167,7 +167,9 @@ def image(data_image):
 
 
 
-# if __name__ == "__main__":
-#     print('[INFO] Starting server at http://localhost:5000')
-#     # socketio.run(app=app, host='192.168.1.4', port=5000, debug=True)
-#     socketio.run(app=app, host='127.0.0.1', port=5000, debug=True)
+if __name__ == "__main__":
+    print('[INFO] Starting server at http://localhost:5000')
+    # socketio.run(app=app, host='192.168.1.4', port=5000, debug=True)
+    socketio.run(app=app, host='127.0.0.1', port=5000, debug=True)
+
+# web: gunicorn --worker-class eventlet -w 1 main:app
