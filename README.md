@@ -7,7 +7,7 @@
 
 To check detection Visit [here](https://danish-detection-app.herokuapp.com/).
 
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/vt5fpE0bzSY)
+[![Watch the video](https://raw.githubusercontent.com/ShaikhMohammaddanish/Real-Time-Object-Detection-with-flask_socketio/master/static/thumbel.png)](https://raw.githubusercontent.com/ShaikhMohammaddanish/Real-Time-Object-Detection-with-flask_socketio/master/static/project_demo.mp4)
 
 
 ## About Me
