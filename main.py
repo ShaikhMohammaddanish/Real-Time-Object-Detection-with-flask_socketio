@@ -167,9 +167,9 @@ def image(data_image):
 
 
 
-if __name__ == "__main__":
-    print('[INFO] Starting server at http://localhost:5000')
-    # socketio.run(app=app, host='192.168.1.4', port=5000, debug=True)
-    socketio.run(app=app, host='danish-detection-app.herokuapp.com', port=5000, debug=True)
+# if __name__ == "__main__":
+#     print('[INFO] Starting server at http://localhost:5000')
+#     # socketio.run(app=app, host='192.168.1.4', port=5000, debug=True)
+#     socketio.run(app=app, host='danish-detection-app.herokuapp.com', port=5000, debug=True)
 
 # web: gunicorn --worker-class eventlet -w 1 main:app
