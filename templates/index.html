@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danish Shaikh- Detection Demo </title>
+
+    <!-- css  -->
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <!-- js -->
+    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" crossorigin="anonymous"></script>
+
+
+    <!-- make open cv ready before loading page -->
+    <script>
+        function onOpenCvReady() {
+            cv['onRuntimeInitialized'] = () => {
+                console.log('opencv is ready')
+                document.body.classList.remove('loading');
+            }
+        }
+    </script>
+
+    <style>
+        body.loading {
+            display: none;
+        }
+    </style>
+
+    <script async src="/static/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
+</head>
+
+<body class="loading">
+    <div class="header">
+        <div class="logo mx-2">
+            <!-- <img class="logoImage" src="/static/img/logo.png" /> -->
+            <span class="logoText">Welcome From, Danish Shaikh </span>
+        </div>
+    </div>
+    <div class="main row w-100">
+
+
+
+        {% with machineNumber=1, modalId="machine1" %}
+        {% include "partial/detect.html" %}
+        {% endwith %}
+
+    
+
+    </div>
+</body>
+
+
+</html>

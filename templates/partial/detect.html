@@ -1,0 +1,231 @@
+<div class="col-sm-10 m-auto pt-5 hide" id="afterSave1">
+    <div class="videos__group video_mai_screen">
+        <div id="video-grid">
+
+            <div class="screen_reload">
+                <!-- <p class="cam_selected"> Camera selected !!</p> -->
+                <button type="button" onclick="window.location.reload();" class="btn btn-primary" data-bs-dismiss="modal"> Select Camera </button>
+            </div>
+
+
+            <div class="startDetection" id="startDetection1" onclick="startdetection1();">
+                <img src="/static/img/play.png" width="136px">
+                <p class="mt-2">Start Detection</p>
+
+            </div>
+
+            <div class='video '>
+                <img src="" class="hide" id="image1">
+            </div>
+
+
+            <button type="button" id="endDetection1" onclick="endDetectionFuncton1();" class="btn btn-primary endDetection hide" data-bs-dismiss="modal">End Detection</button>
+
+
+
+            <!-- just for programing use not to display -->
+            <div id="container">
+                <canvas style="display: none;" id="canvasOutput1"></canvas>
+                <video autoplay="true" id="videoElement1" style="display: none;"></video>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="col-sm-6 m-auto pt-5  " id="beforeSave1">
+    <div class="videos__group">
+
+        <div class="container text-center">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn  " style="background-color: black; border-radius: 50%; color: #ffff;" data-bs-toggle="modal" data-bs-target="#{{modalId}}">
+                +
+            </button>
+            <p class="m-3">Select Camera</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="{{modalId}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="exampleModalLabel">Select Camera</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <div class="tab-pane fade show active" id="Webcam1" role="tabpanel" aria-labelledby="Webcam-tab1">
+                    <label for="videoSource1">Select Camera</label>
+                    <select id="videoSource1"></select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="HomeScreen1();" type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    // show available camera for selection
+    navigator.mediaDevices.enumerateDevices().then(function (devices) {
+        for (var i = 0; i < devices.length; i++) {
+            var device = devices[i];
+            if (device.kind === 'videoinput') {
+                console.log(device)
+                var option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || 'camera ' + (i + 1);
+                document.querySelector('select#videoSource1').appendChild(option);
+            }
+        };
+    });
+
+    // veriable decleration and selecting dom elements
+    const video1 = document.querySelector("#videoElement1");
+    const canvas1 = document.querySelector("#canvasOutput1");
+    const image_id_1 = document.getElementById('image1');
+    const devise_for_1 = document.querySelector("#videoSource1")
+    const beforeSave1 = document.getElementById("beforeSave1")
+    const afterSave1 = document.getElementById("afterSave1")
+
+    const validation1 = document.getElementById('validation1');
+    const startDetection1 = document.getElementById("startDetection1")
+    const endDetection1 = document.getElementById("endDetection1")
+
+
+    let Flasksocket1
+
+
+
+
+
+
+
+
+
+
+    function HomeScreen1() {
+        beforeSave1.classList.add('hide');
+        afterSave1.classList.remove('hide');
+        Flasksocket1 = io("https://9a4bd177790e.ngrok.io/", { query: { transport: "websocket" } });
+
+        // Flask socket metods
+        Flasksocket1.on('connect', function () { console.log("Connected...!", Flasksocket1.connected) });
+    }
+
+
+
+
+    function startdetection1() {
+
+
+        image_id_1.classList.remove('hide');
+        endDetection1.classList.remove('hide');
+        startDetection1.classList.add('hide')
+
+        beforeSave1.classList.add('hide');
+        afterSave1.classList.remove('hide');
+
+
+
+
+
+
+        // Starting camera
+        video1.width = 500;
+        video1.height = 375;
+
+        var constraints = { deviceId: { exact: devise_for_1.value } }
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia(
+                { video: constraints }
+
+            )
+                .then(function (stream) {
+                    video1.srcObject = stream;
+                    video1.play();
+                    // video1.pause();
+                })
+                .catch(function (err0r) {
+                    console.log(err0r)
+                    console.log("Something went wrong!");
+                });
+        }
+
+
+
+
+
+        let src = new cv.Mat(video1.height, video1.width, cv.CV_8UC4);
+        let dst = new cv.Mat(video1.height, video1.width, cv.CV_8UC1);
+        let cap = new cv.VideoCapture(video1);
+        const FPS = 30;
+
+        setInterval(() => {
+            cap.read(src)
+            canvas1.getContext('2d').drawImage(video1, 0, 0, canvas1.width, canvas1.height);
+            var type = "image/png"
+            var data = canvas1.toDataURL(type);
+            data = data.replace('data:' + type + ';base64,', ''); //split off junk 
+
+            // send image for detection to server after detection server will emmit method name response_back
+
+            Flasksocket1.emit('image', data);
+        }, 10000 / FPS);
+
+
+        Flasksocket1.on('response_back', function (data) {
+            data = JSON.parse(data)
+            // console.log(data)
+
+            // show detected image on screen
+            image_id_1.src = data.stringData;
+
+        });
+
+    };
+
+
+
+    function endDetectionFuncton1() {
+        try {
+            image_id_1.classList.add('hide');
+            endDetection1.classList.add('hide');
+            startDetection1.classList.remove('hide')
+            Flasksocket1.disconnect()
+            video1.pause();
+            video1.currentTime = 0;
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+
+
+
+
+
+
+
+</script>
