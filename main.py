@@ -16,6 +16,14 @@ import os
 import glob
 
 
+if not(os.path.exists('pretrain_model/yolov3.weights')):
+    url = f'https://pjreddie.com/media/files/yolov3.weights'
+    r = requests.get(url, allow_redirects=True)
+    open('pretrain_model/yolov3.weights', 'wb').write(r.content)
+
+netDetection = cv2.dnn.readNetFromDarknet("pretrain_model/yolov3.cfg","pretrain_model/yolov3.weights"  )
+
+
 labelsPath = 'pretrain_model/yolov3.txt'
 LABELS = open(labelsPath).read().strip().split("\n")
 
@@ -141,7 +149,6 @@ def image(data_image):
     ## converting RGB to BGR, as opencv standards
     frame = cv2.cvtColor(np.array(pimg), cv2.COLOR_RGB2BGR)
 
-    netDetection = cv2.dnn.readNetFromDarknet("pretrain_model/yolov3.cfg","pretrain_model/yolov3.weights"  )
     frame = detectBoundigBox(frame,  netDetection)
 
     # Process the image frame
