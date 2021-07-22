@@ -9,7 +9,6 @@ Check detection Visit [here](https://pip.pypa.io/en/stable/).
 
 [![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/vt5fpE0bzSY)
 
-## Feature
 
 ## About Me
 Danish Shaikh
